@@ -67,3 +67,8 @@ h1, h2, p {
     background-image: url('images/wall.png');
     background-size: cover;
 }
+
+.player {
+    background-image: url('images/player.png');
+    background-size: cover;
+}
