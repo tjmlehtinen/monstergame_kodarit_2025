@@ -49,6 +49,13 @@ function startGame() {
     drawBoard(gameBoard);
 }
 
+function generateObstacles() {
+    const obstacles = [
+        [[0,0],[1,0],[0,1],[1,1]], // square
+        [[0,0],[0,1],[0,2],[0,3]], // I 
+    ];
+}
+
 function generateRandomBoard() {
     const newBoard = Array.from({ length: BOARDSIZE }, () => Array(BOARDSIZE).fill(" "));
     for (let y=0; y < BOARDSIZE; ++y) {
@@ -62,6 +69,7 @@ function generateRandomBoard() {
     setCell(newBoard, player.x, player.y, "P");
     return newBoard;
 }
+
 
 function drawBoard(board) {
     const gameContainer = document.getElementById("game-container");
@@ -99,11 +107,12 @@ class Player {
 
         const newX = currentX + dx;
         const newY = currentY + dy;
-
-        this.x = newX;
-        this.y = newY;
-
-        setCell(gameBoard, currentX, currentY, " ");
-        setCell(gameBoard, this.x, this.y, "P");
+        if (getCell(gameBoard, newX, newY) === " ") {
+            this.x = newX;
+            this.y = newY;
+    
+            setCell(gameBoard, currentX, currentY, " ");
+            setCell(gameBoard, this.x, this.y, "P");
+        }
     }
 }
