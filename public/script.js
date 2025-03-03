@@ -20,6 +20,25 @@ function calculateCellSize() {
     return gameBoardSize / BOARDSIZE;
 }
 
+document.addEventListener("keydown", (event) => {
+    switch (event.key) {
+        case "ArrowDown":
+            player.move(0, 1);
+            break;
+        case "ArrowUp":
+            player.move(0, -1);
+            break;
+        case "ArrowRight":
+            player.move(1, 0);
+            break;
+        case "ArrowLeft":
+            player.move(-1, 0);
+            break;
+    }
+    event.preventDefault();
+    drawBoard(gameBoard);
+});
+
 document.getElementById("start-button").addEventListener("click", startGame);
 
 function startGame() {
@@ -39,12 +58,14 @@ function generateRandomBoard() {
             }
         }
     }
-    setCell(newBoard, 6, 4, "P");
+    player = new Player(6, 4);
+    setCell(newBoard, player.x, player.y, "P");
     return newBoard;
 }
 
 function drawBoard(board) {
     const gameContainer = document.getElementById("game-container");
+    gameContainer.innerHTML = "";
     gameContainer.style.gridTemplateColumns = `repeat(${BOARDSIZE}, 1fr)`;
 
     const cellSize = calculateCellSize();
