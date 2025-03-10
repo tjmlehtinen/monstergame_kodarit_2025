@@ -6,12 +6,28 @@ const BOARDSIZE = 15;
 let gameBoard;
 let player;
 
+function randomInt(min, max) {
+    const randomFloat = Math.random() * (max - min) + min;
+    return Math.floor(randomFloat);
+}
+
 function getCell(board, x, y) {
     return board[y][x];
 }
 
 function setCell(board, x, y, value) {
     board[y][x] = value;
+}
+
+function randomEmptyPosition(board) {
+    const x = randomInt(1, BOARDSIZE - 1);
+    const y = randomInt(1, BOARDSIZE - 1);
+    if (getCell(board, x, y) === " ") {
+        return [x, y];
+    }
+    else {
+        return randomEmptyPosition(board);
+    }
 }
 
 function calculateCellSize() {
@@ -49,11 +65,29 @@ function startGame() {
     drawBoard(gameBoard);
 }
 
-function generateObstacles() {
+function generateObstacles(board) {
     const obstacles = [
         [[0,0],[1,0],[0,1],[1,1]], // square
-        [[0,0],[0,1],[0,2],[0,3]], // I 
+        [[0,0],[0,1],[0,2],[0,3]], // I
+        [[0,0],[1,0],[2,0],[2,1]],
     ];
+    const positions = [
+        {x: 3, y: 3},
+        {x: 9, y: 3},
+        {x: 3, y: 9},
+        {x: 9, y: 9},
+    ];
+    for (const position of positions) {
+        const obstacle = obstacles[randomInt(0, obstacles.length)];
+        placeObstacle(board, obstacle, position);
+    }
+}
+
+function placeObstacle(board, obstacle, position) {
+    for (const coordinatePair of obstacle) {
+        const [x, y] = coordinatePair;
+        setCell(board, position.x + x, position.y + y, "W");
+    }
 }
 
 function generateRandomBoard() {
@@ -65,7 +99,9 @@ function generateRandomBoard() {
             }
         }
     }
-    player = new Player(6, 4);
+    generateObstacles(newBoard);
+    const [playerX, playerY] = randomEmptyPosition(newBoard);
+    player = new Player(playerX, playerY);
     setCell(newBoard, player.x, player.y, "P");
     return newBoard;
 }
