@@ -6,6 +6,7 @@ const BOARDSIZE = 15;
 let gameBoard;
 let player;
 let monsters;
+let monsterMoveInterval;
 
 function randomInt(min, max) {
     const randomFloat = Math.random() * (max - min) + min;
@@ -74,6 +75,7 @@ function startGame() {
     startScreen.style.display = "none";
     gameScreen.style.display = "block";
     gameBoard = generateRandomBoard();
+    monsterMoveInterval = setInterval(moveMonsters, 1000);
     console.log(gameBoard);
     drawBoard(gameBoard);
 }
@@ -185,7 +187,39 @@ class Monster {
     }
 }
 
+function moveMonsters() {
+    for (const monster of monsters) {
+        const moves = [
+            {x: monster.x + 1, y: monster.y},
+            {x: monster.x - 1, y: monster.y},
+            {x: monster.x, y: monster.y + 1},
+            {x: monster.x, y: monster.y - 1}
+        ];
+        const legalMoves = moves.filter(move => getCell(gameBoard, move.x, move.y) === " ");
+        if (legalMoves.length > 0) {
+            const distanceToPlayer = (pos) => Math.abs(player.x - pos.x) + Math.abs(player.y - pos.y);
+            // tähän vertailu etäisyyden mukaan
+            const nextPosition = legalMoves[randomInt(0, legalMoves.length)];
+            setCell(gameBoard, monster.x, monster.y, " ");
+            monster.x = nextPosition.x;
+            monster.y = nextPosition.y;
+            setCell(gameBoard, monster.x, monster.y, "M");
+        }
+    }
+    drawBoard(gameBoard);
+}
+
 function shootAt(x, y) {
+    if (getCell(gameBoard, x, y) === "W") {
+        return;
+    }
+    if (getCell(gameBoard, x, y) === "M") {
+        const monsterIndex = monsters.findIndex(m => m.x === x && m.y === y);
+        monsters.splice(monsterIndex, 1);
+    }
+    if (monsters.length === 0) {
+        alert("hirviöt loppu")
+    }
     setCell(gameBoard, x, y, "B");
     setTimeout(() => {setCell(gameBoard, x, y, " ");}, 500);
     drawBoard(gameBoard);
