@@ -80,6 +80,12 @@ function startGame() {
     drawBoard(gameBoard);
 }
 
+function endGame() {
+    clearInterval(monsterMoveInterval);
+    gameScreen.style.display = "none";
+    startScreen.style.display = "block";
+}
+
 function generateObstacles(board) {
     const obstacles = [
         [[0,0],[1,0],[0,1],[1,1]], // square
@@ -188,6 +194,7 @@ class Monster {
 }
 
 function moveMonsters() {
+    let hitIndices = [];
     for (const monster of monsters) {
         const moves = [
             {x: monster.x + 1, y: monster.y},
@@ -195,16 +202,33 @@ function moveMonsters() {
             {x: monster.x, y: monster.y + 1},
             {x: monster.x, y: monster.y - 1}
         ];
-        const legalMoves = moves.filter(move => getCell(gameBoard, move.x, move.y) === " ");
+        const isMoveLegal = (move) => getCell(gameBoard, move.x, move.y) === " "
+                                    || getCell(gameBoard, move.x, move.y) === "B"
+                                    || getCell(gameBoard, move.x, move.y) === "P";
+        const legalMoves = moves.filter(isMoveLegal);
         if (legalMoves.length > 0) {
             const distanceToPlayer = (pos) => Math.abs(player.x - pos.x) + Math.abs(player.y - pos.y);
-            // tähän vertailu etäisyyden mukaan
-            const nextPosition = legalMoves[randomInt(0, legalMoves.length)];
+            const closerToPlayer = (a, b) => distanceToPlayer(a) - distanceToPlayer(b);
+            legalMoves.sort(closerToPlayer);
+            const nextPosition = legalMoves[0];
             setCell(gameBoard, monster.x, monster.y, " ");
             monster.x = nextPosition.x;
             monster.y = nextPosition.y;
-            setCell(gameBoard, monster.x, monster.y, "M");
+            if (getCell(gameBoard, monster.x, monster.y) === "P") {
+                endGame();
+            }
+            else if (getCell(gameBoard, monster.x, monster.y) === "B") {
+                const monsterIndex = monsters.indexOf(monster);
+                hitIndices.push(monsterIndex);
+            }
+            else {
+                setCell(gameBoard, monster.x, monster.y, "M");
+            }
         }
+    }
+    // ei toimi, koska splice sotkee indeksit
+    for (const i of hitIndices) {
+        monsters.splice(i, 1);
     }
     drawBoard(gameBoard);
 }
@@ -217,10 +241,10 @@ function shootAt(x, y) {
         const monsterIndex = monsters.findIndex(m => m.x === x && m.y === y);
         monsters.splice(monsterIndex, 1);
     }
-    if (monsters.length === 0) {
-        alert("hirviöt loppu")
-    }
     setCell(gameBoard, x, y, "B");
     setTimeout(() => {setCell(gameBoard, x, y, " ");}, 500);
     drawBoard(gameBoard);
+    if (monsters.length === 0) {
+        alert("hirviöt loppu")
+    }
 }
