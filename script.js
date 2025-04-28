@@ -86,7 +86,7 @@ function startGame() {
     scoreBoard.textContent = "SCORE: " + score
     gameBoard = generateRandomBoard();
     monsterSpeed = 1000;
-    monsterMoveInterval = setInterval(moveMonsters, monsterSpeed);
+    setTimeout(() => {monsterMoveInterval = setInterval(moveMonsters, monsterSpeed);}, 500);
     drawBoard(gameBoard);
 }
 
@@ -95,7 +95,7 @@ function nextLevel() {
     clearInterval(monsterMoveInterval);
     gameBoard = generateRandomBoard();
     monsterSpeed *= 0.9;
-    monsterMoveInterval = setInterval(moveMonsters, monsterSpeed);
+    setTimeout(() => {monsterMoveInterval = setInterval(moveMonsters, monsterSpeed);}, 500);
     drawBoard(gameBoard);
 }
 
