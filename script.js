@@ -1,5 +1,6 @@
 const startScreen = document.getElementById("start-screen");
 const gameScreen = document.getElementById("game-screen");
+const gameOverScreen = document.getElementById("game-over-screen");
 const scoreBoard = document.getElementById("score-board");
 
 const firebaseConfig = {
@@ -116,9 +117,17 @@ function nextLevel() {
 function endGame() {
     gameRunning = false;
     clearInterval(monsterMoveInterval);
-    alert("Kuolit ja peli loppui");
-    gameScreen.style.display = "none";
-    startScreen.style.display = "block";
+    //alert("Kuolit ja peli loppui");
+    gameOverScreen.style.display = "block";
+}
+
+function saveScore() {
+    const playerName = document.getElementById("player-name").value;
+    if (playerName.trim() === "") {
+        alert("Anna nimesi!!!");
+        return;
+    }
+    console.log(playerName);
 }
 
 function generateObstacles(board) {
