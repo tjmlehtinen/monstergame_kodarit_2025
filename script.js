@@ -2,7 +2,6 @@ const startScreen = document.getElementById("start-screen");
 const gameScreen = document.getElementById("game-screen");
 const scoreBoard = document.getElementById("score-board");
 
-
 const firebaseConfig = {
     apiKey: "AIzaSyAk7dNHJHBmqsOZ8CeJHvEAgjqsWbvkmdQ",
     authDomain: "monstergame-22e2b.firebaseapp.com",

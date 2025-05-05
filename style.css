@@ -42,6 +42,20 @@ h1, h2, p {
     position: relative;
 }
 
+#game-over-screen {
+    display: none;
+    background-color: rgba(241, 234, 234, 0.8);
+    color: rgb(14, 11, 11);
+    padding: 20px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    z-index: 10; /* jotta on päällimmmäisenä ja input kenttään pystyy kirjoittamaan */
+}
+
 #score-board {
     font-size: 24px;
     font-weight: bold;
