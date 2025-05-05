@@ -2,6 +2,21 @@ const startScreen = document.getElementById("start-screen");
 const gameScreen = document.getElementById("game-screen");
 const scoreBoard = document.getElementById("score-board");
 
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAk7dNHJHBmqsOZ8CeJHvEAgjqsWbvkmdQ",
+    authDomain: "monstergame-22e2b.firebaseapp.com",
+    projectId: "monstergame-22e2b",
+    storageBucket: "monstergame-22e2b.firebasestorage.app",
+    messagingSenderId: "819356303708",
+    appId: "1:819356303708:web:0c5172893aa04819818199",
+    measurementId: "G-BHXC8ZC15H"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
 const BOARDSIZE = 15;
 
 let gameRunning = false;
